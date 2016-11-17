@@ -29,7 +29,7 @@
 
     function( texture ) {
       // Do something with the texture
-      var geometry = new THREE.SphereGeometry(4,64,64 );
+      var geometry = new THREE.SphereGeometry(4,120,120 );
 
 
       var material = new THREE.MeshPhongMaterial( {
@@ -55,7 +55,14 @@
 
   scene.add(light);
   scene.add( ambientLight );
+  container.addEventListener('click', function(){
+    if(camera.position.z == 1){
+      camera.position.z = 8;
+    } else {
+      camera.position.z = 1;
+    }
 
+  });
   function render() {
     requestAnimationFrame( render );
     camera.position.x += ( mouseX - camera.position.x ) * 0.05;
@@ -64,6 +71,7 @@
 		// scene.rotation.y -= 0.005;
     scene.rotation.y += 0.005;
     scene.position.x = 5;
+
     // scene.position.z -= 0.0005
     renderer.render( scene, camera );
   }
