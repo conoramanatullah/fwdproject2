@@ -1,0 +1,28 @@
+body {
+  text-align: center;
+  margin: 0 auto;
+  overflow: hidden;
+}
+#interface {
+  font-family: 'Oswald', sans-serif;
+  margin-left: 3em;
+  color: white;
+  margin: 3em auto;
+  z-index: 1000;
+  width: 50vw;
+  height: 80vh;
+  /*background-color: blue;*/
+  /*background: none;*/
+  position: absolute;
+}
+#interface h1 {
+  font-size: 3em
+}
+#container {
+  position: relative;
+  z-index: 1;
+}
+
+/*font-family: 'Oswald', sans-serif;
+font-family: 'Open Sans Condensed', sans-serif;
+font-family: 'Inconsolata', monospace;*/
