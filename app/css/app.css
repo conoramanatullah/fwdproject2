@@ -63,13 +63,16 @@ font-family: 'Inconsolata', monospace;*/
   list-style: none;
 }
 .selective-list ul li{
-  text-align: center;
+  /*text-align: center;*/
+  padding: 5px;
   font-size: 1.5em;
   width: 100px;
   height: 100%;
 
+
 }
 .selective-list ul li:hover{
+  /*border: solid white;*/
   border-radius: 5px;
   cursor: pointer;
   background-color: rgba(255, 255, 255, 0.3);

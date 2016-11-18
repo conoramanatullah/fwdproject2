@@ -15,6 +15,9 @@
   var skyGeo = new THREE.SphereGeometry(100000, 25, 25);
   var ambientLight = new THREE.AmbientLight( 0x404040 );
 
+  scene.add(light);
+  light.position.z = 350;
+  light.position.y = 100;
 
 
   camera.position.z = 8;
@@ -33,7 +36,7 @@
       function( texture ) {
 
         var geometry = new THREE.SphereGeometry(4,120,120 );
-        var material = new THREE.MeshPhongMaterial( {
+        var material = new THREE.MeshLambertMaterial( {
           map: texture,
         } );
         var sphere = new THREE.Mesh( geometry, material );
