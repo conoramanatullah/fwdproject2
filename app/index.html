@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Inconsolata|Open+Sans+Condensed:300|Oswald" rel="stylesheet">
     <link rel="stylesheet" href="../node_modules/normalizecss/normalize.css">
-    <link rel="stylesheet" href="css/app.css?v=1.02">
+    <link rel="stylesheet" href="css/app.css?v=1.05">
     <title>Space</title>
 
   </head>
@@ -21,6 +21,9 @@
         <div class="navigation-link" id="jupiter-button">
           Jupiter
         </div>
+        <div class="navigation-link" id="moon-button">
+          Moon
+        </div>
       </span>
       <div id="interface-content">
 
@@ -29,26 +32,60 @@
     </div>
     <div id="container"></div>
     <script type="application/x-glsl" id="sky-vertex">
-      varying vec2 vUV;
+    attribute vec4 tangent;
 
-      void main() {
-        vUV = uv;
-        vec4 pos = vec4(position, 1.0);
-        gl_Position = projectionMatrix * modelViewMatrix * pos;
-      }
+uniform vec2 uvScale;
+uniform vec3 lightPosition;
+
+varying vec2 vUv;
+varying mat3 tbn;
+varying vec3 vLightVector;
+
+void main() {
+  vUv = uvScale * uv;
+
+  // Create the Tangent-Binormal-Normal Matrix used for transforming
+  // coordinates from object space to tangent space
+  vec3 vNormal = normalize(normalMatrix * normal);
+  vec3 vTangent = normalize( normalMatrix * tangent.xyz );
+  vec3 vBinormal = normalize(cross( vNormal, vTangent ) * tangent.w);
+  tbn = mat3(vTangent, vBinormal, vNormal);
+
+  // Calculate the Vertex-to-Light Vector
+  vec4 lightVector = viewMatrix * vec4(lightPosition, 1.0);
+  vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
+  vLightVector = normalize(lightVector.xyz - modelViewPosition.xyz);
+
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
     </script>
     <script type="application/x-glsl" id="sky-fragment">
-      uniform sampler2D texture;
-      varying vec2 vUV;
+    uniform sampler2D textureMap;
+uniform sampler2D normalMap;
+varying vec2 vUv;
+varying mat3 tbn;
+varying vec3 vLightVector;
 
-      void main() {
-        vec4 sample = texture2D(texture, vUV);
-        gl_FragColor = vec4(sample.xyz, sample.w);
-      }
+void main() {
+    // Transform texture coordinate of normal map to a range (-1.0, 1.0)
+    vec3 normalCoordinate = texture2D(normalMap, vUv).xyz * 2.0 - 1.0;
+
+    // Transform the normal vector in the RGB channels to tangent space
+    vec3 normal = normalize(tbn * normalCoordinate.rgb);
+
+    // Intensity calculated as dot of normal and vertex-light vector
+    float intensity = max(0.07, dot(normal, vLightVector));
+
+    // Adjustments to alpha and intensity per color channel may be made
+    vec4 lighting = vec4(intensity, intensity, intensity, 1.0);
+
+    // Final color is calculated with the lighting applied
+    gl_FragColor = texture2D(textureMap, vUv) * lighting;
+}
     </script>
     <script src="../node_modules/three/build/three.js"></script>
     <script src="../node_modules/jquery/dist/jquery.js"></script>
-    <script src="js/interface.js?v=1.07"></script>
-    <script src="js/app.js?v=1.02"></script>
+    <script src="js/interface.js?v=1.10"></script>
+    <script src="js/app.js?v=1.09"></script>
   </body>
 </html>

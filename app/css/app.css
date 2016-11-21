@@ -17,6 +17,7 @@ body {
   /*background: none;*/
   position: absolute;
 }
+
 #interface h1 {
   font-family: 'Oswald', sans-serif;
   font-size: 3em
@@ -24,6 +25,8 @@ body {
 #interface-navigation {
   display: inline-block;
   padding: 2em;
+  /*padding-top: 100px;*/
+  /*margin-bottom: 10000px;*/
   margin: 0 auto;
 }
 .navigation-link {
@@ -43,12 +46,11 @@ body {
   /*height: 20vh;*/
   width: 90%;
   padding: 20px;
-  padding-top: 0px;
   border-radius: 7px;
   border: 1px solid white;
 }
 #container {
-
+  background: url('../../assets/galaxy.jpg');
   position: relative;
   z-index: 1;
 }
@@ -89,4 +91,17 @@ font-family: 'Inconsolata', monospace;*/
   cursor: pointer;
   background-color: rgba(255, 255, 255, 0.3);
 
+}
+
+
+@media (max-width: 500px){
+  #interface {
+    width: 80vw;
+  }
+}
+
+@media (max-width: 1000px) {
+  #interface {
+    width: 60vw;
+  }
 }

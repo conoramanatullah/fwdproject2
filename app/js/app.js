@@ -12,8 +12,8 @@
   var windowHalfY = window.innerHeight / 2;
   var material;
   var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
-  var skyGeo = new THREE.SphereGeometry(100000, 25, 25);
-  var ambientLight = new THREE.AmbientLight( 0x404040 );
+  // var skyGeo = new THREE.SphereGeometry(100000, 25, 25);
+  // var ambientLight = new THREE.AmbientLight( 0x404040 );
 
   scene.add(light);
   light.position.z = 350;
@@ -29,15 +29,48 @@
   container = document.getElementById('container');
   container.appendChild( renderer.domElement );
 
+  function loadMoon(){
+    console.log('loading Moon');
+    var texture = loader.load(
+      '../assets/moon.jpg',
+      function( texture ) {
+        var normal = loader.load(
+          '../assets/moon-normal.jpg'
+        );
+        var geometry = new THREE.SphereGeometry(4,120,120 );
+        var material = new THREE.MeshStandardMaterial( {
+          roughness: 0.1,
+          metalness: 0.2,
+          map: texture,
+          normalMap: normal
+        } );
+        var sphere = new THREE.Mesh( geometry, material );
+        sphere.name = 'moon';
+        scene.add( sphere );
+      },
+      function( xhr ) {
+        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+      } ,
+      function( xhr ) {
+        console.log('Error Loading Texture');
+      }
+    );
+
+  };
   function loadEuropa(){
     console.log('loading Europa');
     var texture = loader.load(
       '../assets/europa.jpg',
       function( texture ) {
-
+        var normal = loader.load(
+          '../assets/europa-normal.jpg'
+        );
         var geometry = new THREE.SphereGeometry(4,120,120 );
-        var material = new THREE.MeshLambertMaterial( {
+        var material = new THREE.MeshStandardMaterial( {
+          roughness: 0.05,
+          metalness: 0.2,
           map: texture,
+          normalMap: normal
         } );
         var sphere = new THREE.Mesh( geometry, material );
         sphere.name = 'europa';
@@ -51,17 +84,22 @@
       }
     );
 
+
+
     texture.anisotropy = maxAnisotropy;
   };
   function loadTitan(){
     console.log('loading Titan');
     loader.load(
-      '../assets/titan.jpg',
+      '../assets/titan-tex.jpg',
       function( texture ) {
+        var normal = loader.load(
+          '../assets/europa-normal.jpg'
+        );
         //remove any other scene geometry
         texture.anisotropy = maxAnisotropy;
         var geometry = new THREE.SphereGeometry(4,120,120 );
-        var material = new THREE.MeshPhongMaterial( {
+        var material = new THREE.MeshStandardMaterial( {
           map: texture,
         } );
         var sphere = new THREE.Mesh( geometry, material );
@@ -83,10 +121,13 @@
     loader.load(
       '../assets/jupiter.jpg',
       function( texture ) {
-
+        var normal = loader.load(
+          '../assets/jupiter-normal.jpg'
+        );
         var geometry = new THREE.SphereGeometry(4,120,120 );
-        var material = new THREE.MeshPhongMaterial( {
+        var material = new THREE.MeshStandardMaterial( {
           map: texture,
+          normalMap: normal
         } );
         var sphere = new THREE.Mesh( geometry, material );
         sphere.name = 'jupiter';
@@ -107,11 +148,13 @@
     // animate();
   };
   scene.add(light);
-  scene.add( ambientLight );
+  // scene.add( ambientLight );
 
   $('#europa-button').on('click', function(){
     scene.remove(scene.getObjectByName('titan'));
     scene.remove(scene.getObjectByName('jupiter'));
+    scene.remove(scene.getObjectByName('moon'));
+
 
     loadEuropa();
 
@@ -121,6 +164,8 @@
     console.log('Loading Titan');
     scene.remove(scene.getObjectByName('europa'));
     scene.remove(scene.getObjectByName('jupiter'));
+    scene.remove(scene.getObjectByName('moon'));
+
 
     loadTitan();
 
@@ -129,8 +174,20 @@
   $('#jupiter-button').on('click', function(){
     scene.remove(scene.getObjectByName('titan'));
     scene.remove(scene.getObjectByName('europa'));
+    scene.remove(scene.getObjectByName('moon'));
+
 
     loadJupiter();
+
+  });
+
+  $('#moon-button').on('click', function(){
+    scene.remove(scene.getObjectByName('titan'));
+    scene.remove(scene.getObjectByName('jupiter'));
+    scene.remove(scene.getObjectByName('europa'));
+
+
+    loadMoon();
 
   });
 
@@ -150,6 +207,7 @@
 		camera.lookAt( scene.position );
 		// scene.rotation.y -= 0.005;
     scene.rotation.y += 0.005;
+    light.rotation.y += 0.010;    // camera.rotation.   = 90 * Math.PI / 180
     scene.position.x = 5;
 
     // scene.position.z -= 0.0005
