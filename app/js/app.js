@@ -99,8 +99,10 @@
         //remove any other scene geometry
         texture.anisotropy = maxAnisotropy;
         var geometry = new THREE.SphereGeometry(4,120,120 );
-        var material = new THREE.MeshStandardMaterial( {
+        var material = new THREE.MeshPhongMaterial( {
+          shininess: 100,
           map: texture,
+          
         } );
         var sphere = new THREE.Mesh( geometry, material );
         sphere.name = 'titan';
@@ -207,7 +209,7 @@
 		camera.lookAt( scene.position );
 		// scene.rotation.y -= 0.005;
     scene.rotation.y += 0.005;
-    light.rotation.y += 0.010;    // camera.rotation.   = 90 * Math.PI / 180
+    light.rotation.y -= 0.010;    // camera.rotation.   = 90 * Math.PI / 180
     scene.position.x = 5;
 
     // scene.position.z -= 0.0005
